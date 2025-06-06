@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" th:replace="~{layout :: html(title=${post.spec.title + ' - ' + site.title},head = null,content = ~{::content})}">
+
+<th:block th:fragment="content">
+  <div class="post_content">
+    <div class="post_bar">
+      <a href="/" class="post_bar_back">
+        <i class="ri-arrow-left-wide-line"></i>
+      </a>
+      <img th:if="${post.owner.avatar != ''}" th:src="@{${post.owner.avatar} ?: @{/assets/images/logo.jpg} }" th:alt="${post.owner.displayName}" class="post_bar_avatar" />
+    </div>
+    <div class="post_top_info">
+      <h1 class="post_title" th:text="${post.spec.title}"></h1>
+      <span class="post_date" th:text="${#dates.format(post.metadata.creationTimestamp, 'yyyy-MM-dd')}"></span>
+    </div>
+
+    <img th:if="${post.spec.cover != ''}" th:src="${post.spec.cover}" th:alt="${post.spec.title}" class="postPage_cover" />
+    <article th:utext="${post.content.content}"></article>
+    <div th:if="${haloCommentEnabled}" id="halo-comment">
+      <halo:comment
+          group="content.halo.run"
+          kind="Post"
+          th:attr="name=${post.metadata.name}"
+      />
+    </div>
+  </div>
+</th:block>
+
+
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:th="https://www.thymeleaf.org"
+  th:fragment="html (head,content)"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=2"
+    />
+    <title th:text="${title != null ? title : site.title}">Heolink</title>
+    <link rel="stylesheet" th:href="@{/assets/css/style.css?v={version}(version=${theme.spec.version})}" />
+    <link th:href="@{/assets/fonts/remixicon.css?v={version}(version=${theme.spec.version})}" rel="stylesheet">
+    <script th:src="@{/assets/js/main.js?v={version}(version=${theme.spec.version})}"></script>
+    <script th:src="@{/assets/js/heolink.js?v={version}(version=${theme.spec.version})}"></script>
+    <script th:src="@{/assets/js/pjax.min.js}"></script>
+    <th:block th:if="${head != null}">
+      <th:block th:replace="${head}" />
+    </th:block>
+  </head>
+  <body th:style="'background-color: '+${theme.config.style.background_color ?: '#f2f2f2'}" th:with="logon = ${#authentication.name != 'anonymousUser'}">
+    <section>
+      <div class="heolink_site"  th:if="${pluginFinder.available('PluginLinks')}">
+        <th:block
+        th:replace="~{widgets/nav}"
+      />
+      <div id="web_content">
+        <th:block th:replace="${content}" />
+      </div>
+
+      </div>
+
+    </section>
+    <h1 th:if="${pluginFinder.available('PluginLinks') == false}" class="no_data">请安装并启用链接管理插件：https://www.halo.run/store/apps/app-hfbQg</h1>
+  </body>
+</html>

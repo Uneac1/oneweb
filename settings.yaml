@@ -1,0 +1,162 @@
+apiVersion: v1alpha1
+kind: Setting
+metadata:
+  name: theme-heolink-setting
+  annotations:
+    # Add supports for Halo App Store
+    # https://halo.run/store/apps/app-acJAD
+    "store.halo.run/app-id": "app-acJAD"
+spec:
+  forms:
+    - group: info
+      label: 信息
+      formSchema:
+        - $formkit: text
+          name: index_title
+          label: 导航标题
+          help: 可以自定义为页面标题，留空则使用站点标题
+        - $formkit: text
+          name: index_icp
+          label: 备案号
+          help: 在中国大陆可以访问的网站应填写备案号
+        - $formkit: text
+          name: index_icp2
+          label: 公安备案
+          help: 在中国大陆可以访问的网站应填写公安备案号
+        - $formkit: select
+          name: search_engine
+          label: 搜索引擎
+          value: ""
+          help: 在首页封面下方的搜索框跳转的搜索引擎
+          options: 
+            - label: 关闭
+              value: ""
+            - label: PostChat (需要PostChat插件)
+              value: "postchat"
+            - label: 本地 (需要搜索组件插件)
+              value: "local"
+            - label: 百度
+              value: "https://www.baidu.com/s?wd="
+            - label: 谷歌
+              value: "https://www.google.com/search?q="
+            - label: 必应
+              value: "https://cn.bing.com/search?q="
+            - label: 搜狗
+              value: "https://www.sogou.com/web?query="
+        - $formkit: text
+          name: icon_api
+          label: 图标API
+          value: "https://api.zhheo.com/favicon/get.php?url={url}"
+          help: "默认的API服务器不保证可用性，仅供演示使用。{url}为链接的地址。搭建自有API方法：https://github.com/owen0o0/getFavicon"
+    - group: style
+      label: 样式
+      formSchema:
+        - $formkit: radio
+          name: show_cover_img
+          id: show_cover_img
+          label: 显示背景图片
+          help: 控制首页是否显示背景图片
+          value: "true"
+          options:
+            - label: 显示
+              value: "true" 
+            - label: 不显示
+              value: "false"
+        - $formkit: attachment
+          name: cover_img
+          if: $get(show_cover_img).value == "true"
+          value: /themes/theme-heolink/assets/images/index_cover2.jpg
+          label: 首页背景图片
+    - group: extension
+      label: 扩展
+      formSchema:
+        - $formkit: radio
+          name: postchat_enable
+          label: PostChat智能对话按钮
+          help: 控制是否启用PostChat智能对话按钮
+          value: "true"
+          options:
+            - label: 启用
+              value: "true"
+            - label: 不启用
+              value: "false"
+        - $formkit: text
+          name: postchat_button_text
+          label: PostChat智能对话按钮文本
+          value: "智能对话"
+          help: 在使用PostChat插件时，智能对话按钮的文本
+
+---
+
+apiVersion: v1alpha1
+kind: AnnotationSetting
+metadata:
+  name: link-group-setting-heolink
+spec:
+  targetRef:
+    group: core.halo.run
+    kind: LinkGroup
+  formSchema:
+    - $formkit: text
+      name: icon
+      label: 图标
+      value: 'ri-'
+      help: "图标库：https://remixicon.com/ 需要带'ri-'前缀"
+    - $formkit: radio
+      name: show_on_heolink
+      label: 显示在HeoLink中
+      help: 控制此分组是否显示在HeoLink中
+      value: "true"
+      options: 
+        - label: 显示
+          value: "true"
+        - label: 不显示
+          value: "false"
+    - $formkit: radio
+      name: show_group_anonymous
+      label: 分组是否登录可见
+      help: 控制此分组是否登录可见
+      value: "false"
+      options:
+        - label: 是
+          value: "true"
+        - label: 否
+          value: "false"
+
+---
+
+apiVersion: v1alpha1
+kind: AnnotationSetting
+metadata:
+  name: link-item-setting-heolink
+spec:
+  targetRef:
+    group: core.halo.run
+    kind: Link
+  formSchema:
+    - $formkit: radio
+      name: to_post_radio
+      id: to_post_radio
+      label: 关联文章
+      help: 控制此链接是否关联文章
+      value: "false"
+      options: 
+        - label: 关联
+          value: "true"
+        - label: 不关联
+          value: "false"
+    - $formkit: postSelect
+      name: to_post
+      if: $get(to_post_radio).value == "true"
+      label: 关联的文章
+      help: "当有关联的文章时，则跳转到对应文章，而不是直接访问地址。上方的关联文章选择 关联 后有效"
+    - $formkit: radio
+      name: show_link_anonymous
+      label: 链接是否登录可见
+      help: 控制此链接是否登录可见
+      value: "false"
+      options:
+        - label: 是
+          value: "true"
+        - label: 否
+          value: "false"
