@@ -1,0 +1,37 @@
+apiVersion: v1alpha1
+kind: Role
+metadata:
+  name: role-template-link-view
+  labels:
+    halo.run/role-template: "true"
+  annotations:
+    rbac.authorization.halo.run/module: "链接"
+    rbac.authorization.halo.run/display-name: "链接查看"
+    rbac.authorization.halo.run/ui-permissions: |
+      ["plugin:links:view"]
+rules:
+  - apiGroups: [ "core.halo.run" ]
+    resources: [ "links", "linkgroups" ]
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "api.plugin.halo.run" ]
+    resources: [ "plugins/links" ]
+    resourceNames: [ "PluginLinks" ]
+    verbs: [ "get", "list" ]
+---
+apiVersion: v1alpha1
+kind: Role
+metadata:
+  name: role-template-link-manage
+  labels:
+    halo.run/role-template: "true"
+  annotations:
+    rbac.authorization.halo.run/module: "链接"
+    rbac.authorization.halo.run/display-name: "链接管理"
+    rbac.authorization.halo.run/ui-permissions: |
+      ["plugin:links:manage"]
+    rbac.authorization.halo.run/dependencies: |
+      ["role-template-link-view"]
+rules:
+  - apiGroups: [ "core.halo.run" ]
+    resources: [ "links", "linkgroups" ]
+    verbs: [ "create", "patch", "update", "delete", "deletecollection" ]

@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Plugin-Main-Class: run.halo.app.plugin.BasePlugin
+Build-Jdk-Spec: 17
+Implementation-Title: plugin-links
+Implementation-Version: 1.6.0
+
